@@ -1,0 +1,410 @@
+\def\doind#1#2{}
+\def\obeylinez{}
+\def\inENV{\relax}
+
+\message{defuns,}
+% Define formatter for defuns
+% First, allow user to change definition object font (\df) internally
+\def\setdeffont#1{\csname DEF#1\endcsname}
+
+\newskip\defbodyindent \defbodyindent=.4in
+\newskip\defargsindent \defargsindent=50pt
+\newskip\deftypemargin \deftypemargin=12pt
+\newskip\deflastargmargin \deflastargmargin=18pt
+
+\newcount\parencount
+% define \functionparens, which makes ( and ) and & do special things.
+% \functionparens affects the group it is contained in.
+\def\activeparens{%
+\catcode`\(=\active \catcode`\)=\active \catcode`\&=\active
+\catcode`\[=\active \catcode`\]=\active}
+{\activeparens % Now, smart parens don't turn on until &foo (see \amprm)
+\gdef\functionparens{\boldbrax\let&=\amprm\parencount=0 }
+\gdef\boldbrax{\let(=\opnr\let)=\clnr\let[=\lbrb\let]=\rbrb}
+
+% Definitions of (, ) and & used in args for functions.
+% This is the definition of ( outside of all parentheses.
+\gdef\oprm#1{{\rm\char`\(}#1 \bf \let(=\opnested %
+\global\advance\parencount by 1 }
+%
+% This is the definition of ( when already inside a level of parens.
+\gdef\opnested{\char`\(\global\advance\parencount by 1 }
+%
+\gdef\clrm{% Print a paren in roman if it is taking us back to depth of 0.
+% also in that case restore the outer-level definition of (.
+\ifnum \parencount=1 {\rm \char `\)}\sl \let(=\oprm \else \char `\) \fi
+\global\advance \parencount by -1 }
+% If we encounter &foo, then turn on ()-hacking afterwards
+\gdef\amprm#1{{\rm\&#1}\let(=\oprm \let)=\clrm\ }
+%
+\gdef\normalparens{\boldbrax\let&=\ampnr}
+} % End of definition inside \activeparens
+%% These parens (in \boldbrax) actually are a little bolder than the
+%% contained text.  This is especially needed for [ and ]
+\def\opnr{{\sf\char`\(}} \def\clnr{{\sf\char`\)}} \def\ampnr{\&}
+\def\lbrb{{\bf\char`\[}} \def\rbrb{{\bf\char`\]}}
+
+% First, defname, which formats the header line itself.
+%#1 should be the function name.
+% #2 should be the type of definition, such as "Function".
+
+\def\defname#1#2{%
+% Get the values of \leftskip and \rightskip as they were
+% outside the @def...
+\dimen2=\leftskip
+\advance\dimen2 by -\defbodyindent
+\dimen3=\rightskip
+\advance\dimen3 by -\defbodyindent
+\noindent        %
+\setbox0=\hbox{\hskip \deflastargmargin{\rm #2}\hskip \deftypemargin}%
+\dimen0=\hsize \advance \dimen0 by -\wd0 % compute size for first line
+\dimen1=\hsize \advance \dimen1 by -\defargsindent %size for continuations
+\parshape 2 0in \dimen0 \defargsindent \dimen1     %
+% Now output arg 2 ("Function" or some such)
+% ending at \deftypemargin from the right margin,
+% but stuck inside a box of width 0 so it does not interfere with linebreaking
+{% Adjust \hsize to exclude the ambient margins,
+% so that \rightline will obey them.
+\advance \hsize by -\dimen2 \advance \hsize by -\dimen3
+\rlap{\rightline{{\rm #2}\hskip \deftypemargin}}}%
+% Make all lines underfull and no complaints:
+\tolerance=10000 \hbadness=10000    
+\advance\leftskip by -\defbodyindent
+{\df#1}\enskip        % Generate function name
+}
+
+% Actually process the body of a definition
+%#1 should be the terminating control sequence, such as \Edefun.
+% #2 should be the "another name" control sequence, such as \defunx.
+% #3 should be the control sequence that actually processes the header,
+%    such as \defunheader.
+
+\def\defparsebody#1#2#3{\begingroup\inENV% Environment for definitionbody
+\medbreak %
+% Define the end token that this defining construct specifies
+% so that it will exit this group.
+\def#1{\endgraf\endgroup\medbreak}%
+\def#2{\begingroup\obeylinez\activeparens\spacesplit#3}%
+\parindent=0in
+\advance\leftskip by \defbodyindent \advance \rightskip by \defbodyindent
+\begingroup %
+\catcode 61=\active %
+\obeylinez\activeparens\spacesplit#3}
+
+\def\defmethparsebody#1#2#3#4{\begingroup\inENV %
+\medbreak %
+% Define the end token that this defining construct specifies
+% so that it will exit this group.
+\def#1{\endgraf\endgroup\medbreak}%
+\def#2##1{\begingroup\obeylinez\activeparens\spacesplit{#3{##1}}}%
+\parindent=0in
+\advance\leftskip by \defbodyindent \advance \rightskip by \defbodyindent
+\begingroup\obeylinez\activeparens\spacesplit{#3{#4}}}
+
+\def\defopparsebody#1#2#3#4#5{\begingroup\inENV %
+\medbreak %
+% Define the end token that this defining construct specifies
+% so that it will exit this group.
+\def#1{\endgraf\endgroup\medbreak}%
+\def#2##1 ##2 {\def#4{##1}%
+\begingroup\obeylinez\activeparens\spacesplit{#3{##2}}}%
+\parindent=0in
+\advance\leftskip by \defbodyindent \advance \rightskip by \defbodyindent
+\begingroup\obeylinez\activeparens\spacesplit{#3{#5}}}
+
+% These parsing functions are similar to the preceding ones
+% except that they do not make parens into active characters.
+% These are used for "variables" since they have no arguments.
+
+\def\defvarparsebody#1#2#3{\begingroup\inENV% Environment for definitionbody
+\medbreak %
+% Define the end token that this defining construct specifies
+% so that it will exit this group.
+\def#1{\endgraf\endgroup\medbreak}%
+\def#2{\begingroup\obeylinez\spacesplit#3}%
+\parindent=0in
+\advance\leftskip by \defbodyindent \advance \rightskip by \defbodyindent
+\begingroup %
+\catcode 61=\active %
+\obeylinez\spacesplit#3}
+
+\def\defvrparsebody#1#2#3#4{\begingroup\inENV %
+\medbreak %
+% Define the end token that this defining construct specifies
+% so that it will exit this group.
+\def#1{\endgraf\endgroup\medbreak}%
+\def#2##1{\begingroup\obeylinez\spacesplit{#3{##1}}}%
+\parindent=0in
+\advance\leftskip by \defbodyindent \advance \rightskip by \defbodyindent
+\begingroup\obeylinez\spacesplit{#3{#4}}}
+
+\def\defopvarparsebody#1#2#3#4#5{\begingroup\inENV %
+\medbreak %
+% Define the end token that this defining construct specifies
+% so that it will exit this group.
+\def#1{\endgraf\endgroup\medbreak}%
+\def#2##1 ##2 {\def#4{##1}%
+\begingroup\obeylinez\spacesplit{#3{##2}}}%
+\parindent=0in
+\advance\leftskip by \defbodyindent \advance \rightskip by \defbodyindent
+\begingroup\obeylinez\spacesplit{#3{#5}}}
+
+% Split up #2 at the first space token.
+% call#1 with two arguments:
+%  the first is all of #2 before the space token,
+%  the second is all of #2 after that space token.
+% If #2 contains no space token, all of it is passed as the first arg
+% and the second is passed as empty.
+
+{\obeylinez
+\gdef\spacesplit#1#2{\endgroup\spacesplitfoo{#1}{#2}\relax\spacesplitfoo}%
+\long\gdef\spacesplitfoo#1#2#3#4\spacesplitfoo{%
+\ifx\relax #3%
+#1{#2}{}\else#1{#2}{#3#4}\fi}}
+
+\def\spacesplit#1#2{\endgroup\spacesplitbar{#1}{#2}}
+\def\spacesplitbar#1#2#3{#1{#2}{#3}}
+
+% So much for the things common to all kinds of definitions.
+
+% Define @defun.
+
+% First, define the processing that is wanted for arguments of \defun
+% Use this to expand the args and terminate the paragraph they make up
+
+\def\defunargs#1{\functionparens \sl
+% Expand, preventing hyphenation at `-' chars.
+% Note that groups don't affect changes in \hyphenchar.
+\hyphenchar\tensl=0
+#1%
+\hyphenchar\tensl=45
+\ifnum\parencount=0 \else \errmessage{unbalanced parens in @def arguments}\fi%
+\interlinepenalty=10000
+\advance\rightskip by 0pt plus 1fil
+\endgraf\penalty 10000\vskip -\parskip\penalty 10000%
+}
+
+\def\deftypefunargs#1{%
+% Expand, preventing hyphenation at `-' chars.
+% Note that groups don't affect changes in \hyphenchar.
+\functionparens
+\code{#1}%
+\interlinepenalty=10000
+\advance\rightskip by 0pt plus 1fil
+\endgraf\penalty 10000\vskip -\parskip\penalty 10000%
+}
+
+% Do complete processing of one @defun or @defunx line already parsed.
+
+% @deffn Command forward-char nchars
+
+\def\deffn{\defmethparsebody\enddeffn\deffnx\deffnheader}
+
+\def\deffnheader#1#2#3{\fnindexbold{#2}%
+\begingroup\defname{#2}{#1}\defunargs{#3}\endgroup %
+\catcode 61=\other % Turn off change made in \defparsebody
+}
+
+% @defun == @deffn Function
+
+\def\defun{\defparsebody\enddefun\defunx\defunheader}
+
+\def\defunheader#1#2{\fnindexbold{#1}% Make entry in function index
+\begingroup\defname{#1}{Function}%
+\defunargs{#2}\endgroup %
+\catcode 61=\other % Turn off change made in \defparsebody
+}
+
+% @deftypefun int foobar (int @var{foo}, float @var{bar})
+
+\def\deftypefun{\defparsebody\enddeftypefun\deftypefunx\deftypefunheader}
+
+%#1 is the data type.  #2 is the name and args.
+\def\deftypefunheader#1#2{\deftypefunheaderx{#1}{#2}}
+%#1 is the data type, #2 the name, #3 the args.
+\def\deftypefunheaderx#1#2#3{%
+\fnindexbold{#2}% Make entry in function index
+\begingroup\defname{\code{#1} #2}{Function}%
+\deftypefunargs{#3}\endgroup %
+\catcode 61=\other % Turn off change made in \defparsebody
+}
+
+% @deftypefn {Library Function} int foobar (int @var{foo}, float @var{bar})
+
+\def\deftypefn{\defmethparsebody\enddeftypefn\deftypefnx\deftypefnheader}
+
+%#1 is the classification.  #2 is the data type.  #3 is the name and args.
+\def\deftypefnheader#1#2#3{\deftypefnheaderx{#1}{#2}{#3}}
+%#1 is the classification, #2 the data type, #3 the name, #4 the args.
+\def\deftypefnheaderx#1#2#3#4{%
+\fnindexbold{#3}% Make entry in function index
+\begingroup\defname{\code{#2} #3}{#1}%
+\deftypefunargs{#4}\endgroup %
+\catcode 61=\other % Turn off change made in \defparsebody
+}
+
+% @defmac == @deffn Macro
+
+\def\defmac{\defparsebody\enddefmac\defmacx\defmacheader}
+
+\def\defmacheader#1#2{\fnindexbold{#1}% Make entry in function index
+\begingroup\defname{#1}{Macro}%
+\defunargs{#2}\endgroup %
+\catcode 61=\other % Turn off change made in \defparsebody
+}
+
+% @defspec == @deffn Special Form
+
+\def\defspec{\defparsebody\enddefspec\defspecx\defspecheader}
+
+\def\defspecheader#1#2{\fnindexbold{#1}% Make entry in function index
+\begingroup\defname{#1}{Special Form}%
+\defunargs{#2}\endgroup %
+\catcode 61=\other % Turn off change made in \defparsebody
+}
+
+% This definition is run if you use @defunx
+% anywhere other than immediately after a @defun or @defunx.
+
+\def\deffnx#1{\errmessage{@deffnx in invalid context}}
+\def\defunx#1{\errmessage{@defunx in invalid context}}
+\def\defmacx#1{\errmessage{@defmacx in invalid context}}
+\def\defspecx#1{\errmessage{@defspecx in invalid context}}
+\def\deftypefnx#1{\errmessage{@deftypefnx in invalid context}}
+\def\deftypeunx#1{\errmessage{@deftypeunx in invalid context}}
+
+% @defmethod, and so on
+
+% @defop {Funny Method} foo-class frobnicate argument
+
+\def\defop#1{\def\defoptype{#1}%
+\defopparsebody\enddefop\defopx\defopheader\defoptype}
+
+\def\defopheader#1#2#3{%
+\dosubind {fn}{\code{#2}}{on#1}% Make entry in function index
+\begingroup\defname{#2}{\defoptype{} on#1}%
+\defunargs{#3}\endgroup %
+}
+
+% @defmethod == @defop Method
+
+\def\defmethod{\defmethparsebody\enddefmethod\defmethodx\defmethodheader}
+
+\def\defmethodheader#1#2#3{%
+\dosubind {fn}{\code{#2}}{on#1}% entry in function index
+\begingroup\defname{#2}{Method on#1}%
+\defunargs{#3}\endgroup %
+}
+
+% @defcv {Class Option} foo-class foo-flag
+
+\def\defcv#1{\def\defcvtype{#1}%
+\defopvarparsebody\enddefcv\defcvx\defcvarheader\defcvtype}
+
+\def\defcvarheader#1#2#3{%
+\dosubind {vr}{\code{#2}}{of#1}% Make entry in var index
+\begingroup\defname{#2}{\defcvtype{} of#1}%
+\defvarargs {#3}\endgroup %
+}
+
+% @defivar == @defcv {Instance Variable}
+
+\def\defivar{\defvrparsebody\enddefivar\defivarx\defivarheader}
+
+\def\defivarheader#1#2#3{%
+\dosubind {vr}{\code{#2}}{of#1}% Make entry in var index
+\begingroup\defname{#2}{Instance Variable of#1}%
+\defvarargs {#3}\endgroup %
+}
+
+% These definitions are run if you use @defmethodx, etc.,
+% anywhere other than immediately after a @defmethod, etc.
+
+\def\defopx#1{\errmessage{@defopx in invalid context}}
+\def\defmethodx#1{\errmessage{@defmethodx in invalid context}}
+\def\defcvx#1{\errmessage{@defcvx in invalid context}}
+\def\defivarx#1{\errmessage{@defivarx in invalid context}}
+
+% Now @defvar
+
+% First, define the processing that is wanted for arguments of @defvar.
+% This is actually simple: just print them in roman.
+% This must expand the args and terminate the paragraph they make up
+\def\defvarargs#1{\normalparens#1%
+\interlinepenalty=10000
+\endgraf\penalty 10000\vskip -\parskip\penalty 10000}
+
+% @defvr Counter foo-count
+
+\def\defvr{\defvrparsebody\enddefvr\defvrx\defvrheader}
+
+\def\defvrheader#1#2#3{\vrindexbold{#2}%
+\begingroup\defname{#2}{#1}\defvarargs{#3}\endgroup}
+
+% @defvar == @defvr Variable
+
+\def\defvar{\defvarparsebody\enddefvar\defvarx\defvarheader}
+
+\def\defvarheader#1#2{\vrindexbold{#1}% Make entry in var index
+\begingroup\defname{#1}{Variable}%
+\defvarargs {#2}\endgroup %
+}
+
+% @defopt == @defvr {User Option}
+
+\def\defopt{\defvarparsebody\enddefopt\defoptx\defoptheader}
+
+\def\defoptheader#1#2{\vrindexbold{#1}% Make entry in var index
+\begingroup\defname{#1}{User Option}%
+\defvarargs {#2}\endgroup %
+}
+
+% @deftypevar int foobar
+
+\def\deftypevar{\defvarparsebody\enddeftypevar\deftypevarx\deftypevarheader}
+
+%#1 is the data type.  #2 is the name.
+\def\deftypevarheader#1#2{%
+\vrindexbold{#2}% Make entry in variables index
+\begingroup\defname{\code{#1} #2}{Variable}%
+\interlinepenalty=10000
+\endgraf\penalty 10000\vskip -\parskip\penalty 10000
+\endgroup}
+
+% @deftypevr {Global Flag} int enable
+
+\def\deftypevr{\defvrparsebody\enddeftypevr\deftypevrx\deftypevrheader}
+
+\def\deftypevrheader#1#2#3{\vrindexbold{#3}%
+\begingroup\defname{\code{#2} #3}{#1}
+\interlinepenalty=10000
+\endgraf\penalty 10000\vskip -\parskip\penalty 10000
+\endgroup}
+
+% This definition is run if you use @defvarx
+% anywhere other than immediately after a @defvar or @defvarx.
+
+\def\defvrx#1{\errmessage{@defvrx in invalid context}}
+\def\defvarx#1{\errmessage{@defvarx in invalid context}}
+\def\defoptx#1{\errmessage{@defoptx in invalid context}}
+\def\deftypevarx#1{\errmessage{@deftypevarx in invalid context}}
+\def\deftypevrx#1{\errmessage{@deftypevrx in invalid context}}
+
+% Now define @deftp
+% Args are printed in bold, a slight difference from @defvar.
+
+\def\deftpargs#1{\bf \defvarargs{#1}}
+
+% @deftp Class window height width ...
+
+\def\deftp{\defvrparsebody\enddeftp\deftpx\deftpheader}
+
+\def\deftpheader#1#2#3{\tpindexbold{#2}%
+\begingroup\defname{#2}{#1}\deftpargs{#3}\endgroup}
+
+% This definition is run if you use @deftpx, etc
+% anywhere other than immediately after a @deftp, etc.
+
+\def\deftpx#1{\errmessage{@deftpx in invalid context}}
+
+

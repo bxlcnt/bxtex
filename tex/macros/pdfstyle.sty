@@ -1,0 +1,36 @@
+% pdfstyle.sty
+% Pinneke Tjandana 06/28/2001
+
+\makeatletter
+\newif\ifpdfoutput
+\@ifundefined{pdfoutput}%
+  {\let\pdfoutput\@undefined}%
+  {\ifcase\pdfoutput
+     \let\pdfoutput\@undefined
+   \else
+     \pdfoutputtrue
+  \fi
+  }%
+\makeatother
+
+\ifpdfoutput
+\usepackage[colorlinks,bookmarks]{hyperref}
+\hypersetup{
+  pdfauthor={Mohsen Banan} % add ,
+  %pdftitle={The te}
+}
+\usepackage{thumbpdf}
+\let\docext=\pdfext
+\else
+\let\docext=\dviext
+\usepackage[bookmarks]{hyperref}
+\fi
+
+\newif\ifpdf
+\ifx\pdfoutput\undefined
+   \pdffalse
+\else
+   \pdfoutput=1
+   \pdftrue
+\fi
+

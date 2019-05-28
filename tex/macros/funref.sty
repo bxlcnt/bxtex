@@ -1,0 +1,26 @@
+% Add support for referencing functions.  This assumes clisp.sty
+% and fvpindex.sty and must be loaded after clisp.sty
+\def\@defn#1#2{\outer\def\defun@type{#1}\outer\def\defun@name{#2}%
+\fnindexbold{#2}\label{FN:#2}%
+\@ifnextchar[{\@defunpackage}{\@defunnopackage}
+}
+
+\def\@defvr#1#2{\outer\def\defun@type{#1}\outer\def\defun@name{#2}%
+\vrindexbold{#2}\label{VR:#2}%
+\@ifnextchar[{\@defvarpackage}{\@defvarnopackage}
+}
+
+\def\@defmc#1#2{\outer\def\defun@type{#1}\outer\def\defun@name{#2}%
+\fnindexbold{#2}\label{FN:#2}%
+\@ifnextchar[{\@defmacpackage}{\@defmacnopackage}
+}
+
+\let\xlref=\xref	% the same indexes in LaTeX, but not in info
+\let\pxlref=\pxref	% the same indexes in LaTeX, but not in info
+% These are now supported.
+\def\funref#1{\f{#1} (page\tie\pageref{FN:#1})}
+\def\specref#1{\f{#1} (page\tie\pageref{FN:#1})}
+\def\macref#1{\f{#1} (page\tie\pageref{FN:#1})}
+\def\varref#1{\v{#1} (page\tie\pageref{VR:#1})}
+\def\conref#1{\v{#1} (page\tie\pageref{VR:#1})}
+

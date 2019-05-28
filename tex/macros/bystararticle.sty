@@ -1,0 +1,61 @@
+\ProvidesPackage{bystararticle}
+
+%
+% We use begin{presentationMode} and begin{articleMode}
+% instead of mode<presentation>{}. This way the equivalent
+% can be dealt with in Hevea
+%
+
+\excludecomment{presentationMode}
+\includecomment{articleMode}
+
+\newcommand{\transition}[1]{}
+\newcommand{\transitionout}[1]{}
+\newcommand{\frameaudio}[1]{}
+
+%
+% In Bx We always use pnote for presentation notes.
+% 
+
+\newcommand{\pnote}{\note}
+
+\newif\ifshowonlynotes
+% \showonlynotestrue
+\showonlynotesfalse
+
+\makeatletter
+\newif\ifbeamer@inlecture\beamer@inlecturetrue
+\def\beamer@currentmode{beamer}
+\input{beamerbasenotes.sty}
+\def\beamer@currentmode{article}
+
+\renewcommand\beamer@outsideframenote[2][]{%
+  \def\beamer@noteenvstart{}%
+  \def\beamer@noteenvend{}%
+  \setkeys{beamernotes}{#1}%
+  \par
+  \beamer@noteenvstart Notes: #2\beamer@noteenvend%
+  %\beamer@noteenvstart#2\beamer@noteenvend%
+  \par
+}
+
+\defbeamertemplate<article>{frame begin}{lined}{\par\noindent\rule{\textwidth}{1pt}\par\beamer@framenotesbegin}
+\defbeamertemplate<article>{frame end}{lined}{\par\noindent\rule{\textwidth}{1pt}\par\beamer@setupnote\beamer@notesactions}
+
+\newcounter{framebox}
+\defbeamertemplate<article>{frame begin}{tikzed}{\par\noindent\stepcounter{framebox}\tikz[remember picture,overlay] \path (-1ex,0) coordinate (frame top \the\value{framebox});\beamer@framenotesbegin}
+\defbeamertemplate<article>{frame end}{tikzed}{\hspace*{\fill}\tikz[remember picture,overlay] \draw (frame top \the\value{framebox}) rectangle (1ex,0);\par\beamer@setupnote\beamer@notesactions}
+
+
+%\setbeamertemplate{frame begin}[tikzed]
+%\setbeamertemplate{frame end}[tikzed]
+
+\setbeamertemplate{frame begin}[lined]
+\setbeamertemplate{frame end}[lined]
+
+
+\ifshowonlynotes
+  \let\beamer@dosingleframe=\beamer@donoframe
+  \g@addto@macro\beamer@endframe{\usebeamertemplate{frame end}}
+\fi
+\makeatother

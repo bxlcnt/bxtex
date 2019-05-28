@@ -1,0 +1,15 @@
+\ProvidesPackage{bystarpersian}
+
+\newfontfamily{\persian}[Script=Arabic]{XB Zar}
+%\newfontfamily\arabicfont[Script=Arabic,Scale=1]{B Nazanin}%
+%\newfontfamily\arabicfontsf[Script=Arabic,Scale=1]{B Nazanin}%
+%\newfontinstance{\persian}[Script=Arabic]{B Nazanin}
+
+% for in-line Arabic we need R-L control
+\newenvironment{fa}{\beginR\persian}{\endR}
+\newcommand{\farsi}[1]{\beginR\persian{#1}\endR}
+
+% simple environment for R-L paragraphs
+\newenvironment{faPar}
+{\everypar={\setbox0\lastbox \beginR
+\box0 \persian}}{}
