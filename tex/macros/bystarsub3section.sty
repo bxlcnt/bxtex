@@ -5,6 +5,12 @@
 
 \usepackage{titlesec}
 
+\usepackage{fix-cm}    % Needed for HUGE Command
+
+\makeatletter
+\newcommand\HUGE{\@setfontsize\Huge{34}{42}}
+\makeatother    
+
 \titleclass{\subsubsubsection}{straight}[\subsection]
 
 \newcounter{subsubsubsection}[subsubsection]

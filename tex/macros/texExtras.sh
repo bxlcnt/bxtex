@@ -97,6 +97,7 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Initial Setup" )
 $( examplesSeperatorSection "/usr/share/texmf/tex/extras" )
+${G_myName} ${extraInfo} -i bisosAppsBxTexPrep
 ${G_myName} ${extraInfo} -i extrasEndShow
 ${G_myName} ${extraInfo} -i extrasEnd_osmt2_verify
 ${G_myName} ${extraInfo} -i extrasEnd_osmt2_set
@@ -108,6 +109,28 @@ _EOF_
 
 noArgsHook() {
   vis_examples
+}
+
+function vis_bisosAppsBxTexPrep {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    if [ ! -d /bisos/apps ] ; then
+	opDo mkdir /bisos/apps
+    fi
+
+    if [ ! -e /bisos/apps/bxtex ] ; then
+	opDo ln -s /bisos/git/bxRepos/bxlcnt/bxtex /bisos/apps/bxtex
+    else
+	ANT_raw "/bisos/apps/bxtex is in place, prep skipped"
+    fi
+
+    opDo ls -ld /bisos/apps/bxtex
+    
+    lpReturn
 }
 
 
