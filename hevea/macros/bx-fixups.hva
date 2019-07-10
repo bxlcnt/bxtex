@@ -4,8 +4,10 @@
 
 \newcommand{\HUGE}{\Huge}
 
+\newcommand{\subsubsubsection}{\subsubsection*}
+
 \newcommand{\geometry}{}
-\renewcommand{\newgeometry}{}
+\newcommand{\newgeometry}{}
 \newcommand{\restoregeometry}{}
 
 \newcommand{\LRE}{}
