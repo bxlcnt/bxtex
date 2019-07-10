@@ -2,6 +2,12 @@
 % {\url}{#1}
 % }
 
+\newcommand{\HUGE}{\Huge}
+
+\newcommand{\geometry}{}
+\renewcommand{\newgeometry}{}
+\newcommand{\restoregeometry}{}
+
 \newcommand{\LRE}{}
 \newcommand{\lstlang@bash@}{}
 \newcommand{\lstdd@bash}{}
