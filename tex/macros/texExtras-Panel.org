@@ -14,7 +14,7 @@
 ####+END:
 * 
 ####+BEGIN: iim:panel:iimsListPanels :iimsList "./_iimsList"
-* ICM Collections :: [[BISOS]] || [[UNISOS]] || [[elisp:(find-file "/libre/ByStar/InitialTemplates/activeDocs/blee/deviceAndUser/fullUsagePanel-en.org")][BxPlatform]] || [[elisp:(find-file "/libre/ByStar/InitialTemplates/activeDocs/blee/bystarContinuum/fullUsagePanel-en.org")][BxSSC Groups]]
+* ICM Collections :: [[BISOS]] || [[UNISOS]] || [[elisp:(find-file "/bisos/apps/defaults/activeDocs/blee/deviceAndUser/fullUsagePanel-en.org")][BxPlatform]] || [[elisp:(find-file "/bisos/apps/defaults/activeDocs/blee/bystarContinuum/fullUsagePanel-en.org")][BxSSC Groups]]
 * Pkg Panels :: [[elisp:(find-file "Panel.org")][Panel.org]]  ||
 ####+END:
 * 
