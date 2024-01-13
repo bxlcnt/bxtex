@@ -1,0 +1,4 @@
+\ProvidesPackage{changepage}
+
+
+\newenvironment{\adjustwidth}[1][2]{}

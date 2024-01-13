@@ -15,3 +15,8 @@
 \newcommand{\lstdd@bash}{}
 \newcommand{\paragraph}{}
 
+
+%%%
+%%% changepage package
+%%%
+\newenvironment{adjustwidth}[2]{}{}
