@@ -1,0 +1,32 @@
+% whenenv.sty - Conditional Environments using etoolbox
+
+\RequirePackage{etoolbox}
+\RequirePackage{environ}
+
+% Internal marker to check if an environment has already been defined
+\newcommand{\@whenenv@defined}[1]{\csdef{whenenv@#1@defined}{1}}
+\newcommand{\@whenenv@isdefined}[1]{\csdef{whenenv@#1@checked}{\csuse{whenenv@#1@defined}}}
+\newcommand{\@whenenv@checkdefined}[1]{%
+  \ifcsdef{whenenv@#1@defined}{}{\PackageError{whenenv}{Environment `#1' has not been declared using \string\whenEnv}{You must use \string\whenEnv{#1} before \string\whenEnable or \string\whenDisable.}}
+}
+
+% \\whenEnv{name} -- defines a new toggle and environment, idempotent
+\newcommand{\whenEnv}[1]{%
+  \ifcsundef{whenenv@#1@defined}{%
+    \newtoggle{when#1@toggle}%
+    \@whenenv@defined{#1}%
+    \NewEnviron{#1}{\iftoggle{when#1@toggle}{\BODY}{}}%
+  }{}%
+}
+
+% \\whenEnable{name} -- enables the environment
+\newcommand{\whenEnable}[1]{%
+  \@whenenv@checkdefined{#1}%
+  \toggletrue{when#1@toggle}%
+}
+
+% \\whenDisable{name} -- disables the environment
+\newcommand{\whenDisable}[1]{%
+  \@whenenv@checkdefined{#1}%
+  \togglefalse{when#1@toggle}%
+}
