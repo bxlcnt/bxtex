@@ -1,0 +1,62 @@
+\documentclass{article}
+
+\usepackage{xcolor}
+\usepackage{censor}
+
+\usepackage{censorPlus}
+
+\begin{document}
+
+\section*{Plain Redacting Commands -- redactNatural, etc)}
+
+% --- Tests for the new commands ---
+% Redact qualifiers
+Natural: \redactNatural{secret natural text}.
+
+Red: \redactRed{secret red text}.
+
+Blue: \redactBlue{secret blue text}.
+
+Green: \redactGreen{secret green text}.
+
+Black: \redactBlack{secret black text}.
+
+White: \redactWhite{secret white text}.
+
+\section*{Labeled Redacting Commands -- redactNaturalLabeled, etc)}
+
+% Labeled redact qualifiers
+Natural: \redactNaturalLabeled{Pg:121-1}{secret natural text}.
+
+Red: \redactRedLabeled{Pg:121-2}{secret red text}.
+
+Blue: \redactBlueLabeled{Pg:121-3}{secret blue text}.
+
+Green: \redactGreenLabeled{Pg:121-4}{secret green text}.
+
+Black: \redactBlackLabeled{Pg:121-5}{secret black text}.
+
+White: \redactWhiteLabeled{Pg:121-6}{secret white text}.
+
+\section*{Unredacting Commands -- unredactNatural, etc)}
+
+% Unredact qualifiers
+Natural: \unredactNatural{revealed natural text}.
+
+Red: \unredactRed{revealed red text}.
+
+Blue: \unredactBlue{revealed blue text}.
+
+Green: \unredactGreen{revealed green text}.
+
+Black: \unredactBlack{revealed black text}.
+
+White: \unredactWhite{revealed white text}.
+
+\end{document}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

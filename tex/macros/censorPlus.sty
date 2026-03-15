@@ -1,0 +1,78 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{censorPlus}[2026/03/14 Censor/redaction helpers]
+
+\RequirePackage{censor}
+\RequirePackage{xcolor}
+
+\makeatletter
+
+\def\censorplus@rulecolor{black}
+\let\censorplus@basecensorrule\censorrule
+\renewcommand\censorrule[1]{%
+\textcolor{\censorplus@rulecolor}{\censorplus@basecensorrule{#1}}}
+
+\newcommand{\censorplus@redact}[2]{%
+	\begingroup
+		\def\censorplus@rulecolor{#1}%
+		\censor{#2}%
+	\endgroup}
+
+\newcommand{\censorplus@redactlabeled}[3]{%
+	\begingroup
+		\def\censorplus@rulecolor{#1}%
+		\sbox0{\censor{#3}}%
+		\makebox[0pt][l]{\usebox0}%
+		\makebox[\wd0][c]{%
+			\begingroup
+				\setlength{\fboxsep}{1pt}%
+				\setlength{\fboxrule}{0.3pt}%
+				\fcolorbox{black}{white}{\textcolor{black}{{\tiny #2}}}%
+			\endgroup}%
+	\endgroup}
+
+\newcommand{\censorplus@unredact}[4]{%
+	\begingroup
+		\def\censorplus@rulecolor{#1}%
+		\sbox0{\censor{#3}}%
+		\makebox[0pt][l]{\usebox0}%
+		\makebox[\wd0][c]{%
+			\ifx#4Y%
+				\begingroup
+					\setlength{\fboxsep}{1pt}%
+					\setlength{\fboxrule}{0.3pt}%
+					\fbox{\textcolor{#2}{#3}}%
+				\endgroup
+			\else
+				\textcolor{#2}{#3}%
+			\fi}%
+	\endgroup}
+
+% Qualifier mappings
+\newcommand{\redactNatural}[1]{\censorplus@redact{white!91!black}{#1}}
+\newcommand{\redactRed}[1]{\censorplus@redact{red}{#1}}
+\newcommand{\redactBlue}[1]{\censorplus@redact{blue}{#1}}
+\newcommand{\redactGreen}[1]{\censorplus@redact{green!70!black}{#1}}
+\newcommand{\redactBlack}[1]{\censorplus@redact{black}{#1}}
+\newcommand{\redactWhite}[1]{\censorplus@redact{white}{#1}}
+
+\newcommand{\redactNaturalLabeled}[2]{\censorplus@redactlabeled{white!91!black}{#1}{#2}}
+\newcommand{\redactRedLabeled}[2]{\censorplus@redactlabeled{red}{#1}{#2}}
+\newcommand{\redactBlueLabeled}[2]{\censorplus@redactlabeled{blue}{#1}{#2}}
+\newcommand{\redactGreenLabeled}[2]{\censorplus@redactlabeled{green!70!black}{#1}{#2}}
+\newcommand{\redactBlackLabeled}[2]{\censorplus@redactlabeled{black}{#1}{#2}}
+\newcommand{\redactWhiteLabeled}[2]{\censorplus@redactlabeled{white}{#1}{#2}}
+
+\newcommand{\unredactNatural}[1]{\censorplus@unredact{white!91!black}{black}{#1}{Y}}
+\newcommand{\unredactRed}[1]{\censorplus@unredact{red}{white}{#1}{N}}
+\newcommand{\unredactBlue}[1]{\censorplus@unredact{blue}{white}{#1}{N}}
+\newcommand{\unredactGreen}[1]{\censorplus@unredact{green!70!black}{white}{#1}{N}}
+\newcommand{\unredactBlack}[1]{\censorplus@unredact{black}{white}{#1}{N}}
+\newcommand{\unredactWhite}[1]{\censorplus@unredact{white}{black}{#1}{Y}}
+
+% Backward-compatibility aliases used during transition
+\let\redcensor\redactRed
+\let\bluecensor\redactBlue
+\let\uncensor\unredactBlack
+\let\uncensorNatural\unredactNatural
+
+\makeatother
