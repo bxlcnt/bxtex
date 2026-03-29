@@ -53,8 +53,124 @@ Black: \unredactBlack{revealed black text}.
 
 White: \unredactWhite{revealed white text}.
 
-\end{document}
+\section*{Long Line Tests -- Redactions Longer Than Line Width}
 
+\subsection*{Long Natural Redactions}
+Natural long: \redactNatural{this is a very long secret text that should definitely exceed the normal line width and force wrapping to the next line when properly handled by the redaction system}.
+
+\subsection*{Long Red Redactions}
+Red long: \redactRed{this is a very long secret text that should definitely exceed the normal line width and force wrapping to the next line when properly handled by the redaction system}.
+
+\subsection*{Long Blue Redactions}
+Blue long: \redactBlue{this is a very long secret text that should definitely exceed the normal line width and force wrapping to the next line when properly handled by the redaction system}.
+
+\subsection*{Long Green Redactions}
+Green long: \redactGreen{this is a very long secret text that should definitely exceed the normal line width and force wrapping to the next line when properly handled by the redaction system}.
+
+\subsection*{Long Black Redactions}
+Black long: \redactBlack{this is a very long secret text that should definitely exceed the normal line width and force wrapping to the next line when properly handled by the redaction system}.
+
+\section*{Long Line Tests -- Unredactions Longer Than Line Width}
+
+\subsection*{Long Natural Unredactions}
+Natural long: \unredactNatural{this is a very long revealed text that should definitely exceed the normal line width and force wrapping to the next line when properly handled by the unredaction system with the grey background box}.
+
+\subsection*{Long Red Unredactions}
+Red long: \unredactRed{this is a very long revealed text that should definitely exceed the normal line width and force wrapping to the next line when properly handled by the unredaction system with the red background}.
+
+\subsection*{Long Blue Unredactions}
+Blue long: \unredactBlue{this is a very long revealed text that should definitely exceed the normal line width and force wrapping to the next line when properly handled by the unredaction system with the blue background}.
+
+\subsection*{Long Green Unredactions}
+Green long: \unredactGreen{this is a very long revealed text that should definitely exceed the normal line width and force wrapping to the next line when properly handled by the unredaction system with the green background}.
+
+\subsection*{Long Black Unredactions}
+Black long: \unredactBlack{this is a very long revealed text that should definitely exceed the normal line width and force wrapping to the next line when properly handled by the unredaction system with the black background}.
+
+\subsection*{Long White Unredactions}
+White long: \unredactWhite{this is a very long revealed text that should definitely exceed the normal line width and force wrapping to the next line when properly handled by the unredaction system with the white background}.
+
+\section*{Mixed Content with Long Unredactions}
+
+Here is some normal text followed by a long unredacted section: \unredactNatural{this is a very long piece of revealed information that when unredacted should wrap naturally to the next line without overflowing the page margins} and then we continue with more normal text after it.
+
+\section*{Word-Split Unredaction Test}
+
+\subsection*{Natural Split}
+
+Using \texttt{\textbackslash unredactNaturalSplit} for long text:
+
+\unredactNaturalSplit{this is a very long revealed text that should definitely exceed the normal line width and force wrapping to the next line when properly handled by the unredaction system with the grey background box}
+
+\subsection*{Red Split}
+
+Using \texttt{\textbackslash unredactRedSplit} for long red unredacted text:
+
+\unredactRedSplit{this is a very long revealed text in red that should definitely exceed the normal line width and force wrapping to the next line when properly handled}
+
+\subsection*{Blue Split}
+
+Using \texttt{\textbackslash unredactBlueSplit} for long blue unredacted text:
+
+\unredactBlueSplit{this is a very long revealed text in blue that should definitely exceed the normal line width and force wrapping to the next line when properly handled}
+
+\subsection*{Green Split}
+
+Using \texttt{\textbackslash unredactGreenSplit} for long green unredacted text:
+
+\unredactGreenSplit{this is a very long revealed text in green that should definitely exceed the normal line width and force wrapping to the next line when properly handled}
+
+\subsection*{Black Split}
+
+Using \texttt{\textbackslash unredactBlackSplit} for long black unredacted text:
+
+\unredactBlackSplit{this is a very long revealed text in black that should definitely exceed the normal line width and force wrapping to the next line when properly handled}
+
+\subsection*{White Split}
+
+Using \texttt{\textbackslash unredactWhiteSplit} for long white unredacted text:
+
+\unredactWhiteSplit{this is a very long revealed text with white background that should definitely exceed the normal line width and force wrapping to the next line when properly handled}
+
+\section*{Word-Split Redaction Test}
+
+\subsection*{Natural Split}
+
+Using \texttt{\textbackslash redactNaturalSplit} for long text:
+
+\redactNaturalSplit{this is a very long secret text that should definitely exceed the normal line width and force wrapping to the next line when properly handled by the redaction system with the grey bar}
+
+\subsection*{Red Split}
+
+Using \texttt{\textbackslash redactRedSplit} for long red redacted text:
+
+\redactRedSplit{this is a very long secret text in red that should definitely exceed the normal line width and force wrapping to the next line when properly handled}
+
+\subsection*{Blue Split}
+
+Using \texttt{\textbackslash redactBlueSplit} for long blue redacted text:
+
+\redactBlueSplit{this is a very long secret text in blue that should definitely exceed the normal line width and force wrapping to the next line when properly handled}
+
+\subsection*{Green Split}
+
+Using \texttt{\textbackslash redactGreenSplit} for long green redacted text:
+
+\redactGreenSplit{this is a very long secret text in green that should definitely exceed the normal line width and force wrapping to the next line when properly handled}
+
+\subsection*{Black Split}
+
+Using \texttt{\textbackslash redactBlackSplit} for long black redacted text:
+
+\redactBlackSplit{this is a very long secret text in black that should definitely exceed the normal line width and force wrapping to the next line when properly handled}
+
+\subsection*{White Split}
+
+Using \texttt{\textbackslash redactWhiteSplit} for long white redacted text:
+
+\redactWhiteSplit{this is a very long secret text with white bar that should definitely exceed the normal line width and force wrapping to the next line when properly handled}
+
+\end{document}
 
 %%% Local Variables:
 %%% mode: latex
